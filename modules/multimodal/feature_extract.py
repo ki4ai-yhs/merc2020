@@ -10,6 +10,7 @@ import glob
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import load_model
 from keras import Model
+from keras import backend as K
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -23,7 +24,7 @@ def inter_model_load(model_path):
     inter_layer_model = Model(inputs=text_model.input, outputs=text_model.get_layer('BottleNeck').output)
     return inter_layer_model
 
-def main(modal):
+def main(modal, type):
 
     if(modal == 'text'):
         modelPath = textModelPath
@@ -37,25 +38,28 @@ def main(modal):
     model = inter_model_load(modelPath)
 
     ### Convert labels to categorical one-hot encoding
-    x_train = np.load('inputs/'+modal+'_train.npy')
-    x_val = np.load('inputs/'+modal+'_val.npy')
+    x = np.load('inputs/'+ modal + '_' + type + '.npy')
 
     ### Model build
     model.summary()
 
-    feature = model.predict(x_train,verbose=1,batch_size=512)
+    feature = model.predict(x, verbose=1, batch_size=512)
     print(np.shape(feature))
-    np.save('features/'+modal+'_BN_train.npy',feature)
 
-    feature = model.predict(x_val,verbose=1)
-    print(np.shape(feature))
-    np.save('features/'+modal+'_BN_val.npy',feature)
+    if not(os.path.isdir('features')):
+        os.makedirs(os.path.join('features'))
+
+    np.save('features/'+modal+ '_BN_' + type + '.npy', feature)
 
     print("Finished")
+
+    K.clear_session()
 
     return None
 
 if __name__ == '__main__':
     print("text/video:")
-    temp = input()
-    main(temp)
+    modal = input()
+    print("train/val/test1/test2/test3:")
+    type = input()
+    main(modal,type)
