@@ -1,5 +1,5 @@
 
-# Multimodal Emotion Recognition base model for MERC2020
+# Multimodal Emotion Recognition baseline code for MERC2020
 	- This is baseline code for MERC2020
 	- This code is based on keras(2.2.4) and tensorflow(1.14).
 	- You need to prepare multimodal emotion dataset and speech recognition baseline code.
@@ -7,7 +7,7 @@
 ## Installation
 	pip3 install -r requirement.txt
 
-## Text base model
+## Text baseline model
 
 ### Root path
 	cd modules/text
@@ -24,7 +24,7 @@
 	Accuracy: 45.23% (validation dataset)
 
 
-## Video base model
+## Video baseline model
 
 ### Root path
 	cd modules/video
@@ -44,7 +44,7 @@
  	- Accuracy: 29.71% (valiation dataset)
 
 
-## Multimodal base model
+## Multimodal baseline model
 
 ### Root path
 	cd modules/multimodal
@@ -56,6 +56,5 @@
 	2. Train model
 	CUDA_VISIBLE_DEVICES=0 python3 train.py
 	
-
 ### Performance
  	- Accuracy: 52.56% (valiation dataset)
