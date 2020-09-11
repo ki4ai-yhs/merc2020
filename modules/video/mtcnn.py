@@ -148,7 +148,8 @@ class MTCNNFaceDetector(FaceCropper):
 
         boxes, _ = self.mtcnn.detect(imgList)
         cnt = 0
-        for eachInput in inputList:
+
+        for i in range(boxes.shape[0]):
             if (boxes[cnt] is None):
                 continue
             else:
