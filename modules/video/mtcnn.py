@@ -1,8 +1,3 @@
-
-## base model
-#from mtcnn.mtcnn import MTCNN
-
-## Revised by YHS (20/08/05)
 ## Reference: https://www.kaggle.com/timesler/guide-to-mtcnn-in-facenet-pytorch
 import os
 
@@ -96,7 +91,7 @@ class MTCNNFaceDetector(FaceCropper):
         Face detect with single input
         :param img: single image (W x H x C)
         :return: face croppped image (W' x H' x C)
-                cnt: number of successfully detected faces
+        :cnt: number of successfully detected faces
         '''
 
         imgResize = cv2.resize(img, dsize=(0,0), fx=self.resizeFactor, fy=self.resizeFactor)
@@ -158,7 +153,7 @@ class MTCNNFaceDetector(FaceCropper):
                 continue
             else:
                 box = boxes[cnt]
-                x = box[0][1]
+                x = box[0][0]
                 y = box[0][1]
                 w = box[0][2]
                 h = box[0][3]
