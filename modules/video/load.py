@@ -2,7 +2,6 @@ import os
 import numpy as np
 import glob
 
-##Set root path##
 
 def load_video_data(folder_path,type):
 
@@ -24,7 +23,6 @@ def load_video_data(folder_path,type):
     output = np.zeros((len(feature_path), _MAX_LEN, 4096))
 
     for i in range(len(feature_path)):
-        
         F = np.load(feature_path[i])
 
         if (F.shape[0] <= _MAX_LEN):
@@ -34,11 +32,10 @@ def load_video_data(folder_path,type):
 
         print("data number:", i)
 
-    print(np.shape(output))
-
     np.save(folder_path + 'video_' + type + '.npy', output)
 
     return output
+
 
 if __name__ == '__main__':
 
