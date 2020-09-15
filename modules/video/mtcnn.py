@@ -83,8 +83,7 @@ class MTCNNFaceDetector(FaceCropper):
         super().__init__(marginRatio, resizeFactor)
         # load mtcnn model
         # self.mtcnnModel = MTCNN()
-        self.mtcnn = MTCNN(select_largest=True, device='cuda:0')
-
+        self.mtcnn = MTCNN(select_largest=True, device='cuda:1')
 
     def detect(self, img):
         '''

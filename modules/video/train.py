@@ -1,11 +1,3 @@
-
-# will be deleted
-import utils
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = str(utils.pick_gpu_lowest_memory())
-
-###############################################################################
-
 import numpy as np
 
 import tensorflow as tf
@@ -22,11 +14,8 @@ def video_base_model():
 
     model = keras.models.Sequential()
     model.add(Masking(mask_value=_MASKING, input_shape=(_MAX_LEN, 4096)))
-#    model.add(TimeDistributed(Dense(512, activation='relu')))
-#    model.add(TimeDistributed(Dense(256, activation='relu')))
-    model.add(Bidirectional(LSTM(128, activation='relu')))
+    model.add((LSTM(256, activation='relu')))
     model.add(Dense(64, activation='relu',name='BottleNeck'))
-    model.add(Dropout(0.25))
     model.add(Dense(7, name='emotion',activation='softmax'))
     model.summary()
     return model

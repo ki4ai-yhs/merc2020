@@ -9,10 +9,14 @@ def load_video_data(folder_path,type):
 
     if(type=='train'):
         feature_path = sorted(glob.glob(folder_path + 'train/' + '*.npy'))
-
     elif(type=='val'):
         feature_path = sorted(glob.glob(folder_path + 'val/' + '*.npy'))
-
+    elif(type=='test1'):
+        feature_path = sorted(glob.glob(folder_path + 'test1/' + '*.npy'))
+    elif(type=='test2'):
+        feature_path = sorted(glob.glob(folder_path + 'test2/' + '*.npy'))
+    elif(type=='test3'):
+        feature_path = sorted(glob.glob(folder_path + 'test3/' + '*.npy'))
     else:
         print("Invalied Input")
 
@@ -29,11 +33,14 @@ def load_video_data(folder_path,type):
 
         print("data number:", i)
 
+    print(np.shape(output))
+
     np.save(folder_path + 'video_' + type + '.npy', output)
 
     return output
 
-image_folder_path = 'dataset/'
+image_folder_path = 'features/'
 
-load_video_data(image_folder_path, 'train')
-load_video_data(image_folder_path, 'val')
+load_video_data(image_folder_path, 'test1')
+load_video_data(image_folder_path, 'test2')
+load_video_data(image_folder_path, 'test3')
