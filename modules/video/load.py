@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import glob
 
@@ -39,8 +40,16 @@ def load_video_data(folder_path,type):
 
     return output
 
-image_folder_path = 'features/'
+if __name__ == '__main__':
 
-load_video_data(image_folder_path, 'test1')
-load_video_data(image_folder_path, 'test2')
-load_video_data(image_folder_path, 'test3')
+    
+    save_dir = 'features/'
+    if not (os.path.isdir(save_dir)):
+        os.makedirs(os.path.join(save_dir))
+
+
+    print("train/val/test1/test2/test3:")
+    type = input()
+    load_video_data(save_dir, type)
+
+    print("save feature in ",save_dir)
