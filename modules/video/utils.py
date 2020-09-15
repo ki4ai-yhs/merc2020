@@ -1,7 +1,5 @@
 import subprocess, re
 
-# Nvidia-smi GPU memory parsing.
-# Tested on nvidia-smi 370.23
 
 def run_command(cmd):
     """Run command, return output as string."""

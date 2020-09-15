@@ -1,6 +1,4 @@
 import os
-# set gpu-memory usages
-os.environ["CUDA_VISIBLE_DEVICES"] = "4,5"
 import numpy as np
 import cv2
 import csv
@@ -12,16 +10,18 @@ from mtcnn import FaceCropperAll
 from preprocessing import Preprocessor
 from keras_vggface.vggface import VGGFace
 from keras import Model
-#set gpu-memory usages
+
+# set gpu-memory usages
+os.environ["CUDA_VISIBLE_DEVICES"] = "4,5"
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config=config)
 
-detectorType = 'mtcnn'
-facecropper = FaceCropperAll(type=detectorType, resizeFactor=1.0)
+# load models
+facecropper = FaceCropperAll(type='mtcnn', resizeFactor=1.0)
 preprocessor = Preprocessor()
-vgg_model = VGGFace(input_shape=(224,224,3), include_top=True, weights='vggface')
-vggface = Model(inputs=vgg_model.input, outputs=vgg_model.get_layer('fc6').output)
+model = VGGFace(input_shape=(224,224,3), include_top=True, weights='vggface')
+vggface = Model(inputs=model.input, outputs=model.get_layer('fc6').output)
 
 def test_input(parentPath, interval=10):
 
@@ -37,6 +37,7 @@ def test_input(parentPath, interval=10):
         N = len(frame_seq)
     else:
         N = max_second * interval
+
     for i in range(0, N, interval):
         frame_seqAbsPath = os.path.join(parentPath, frame_seq[i])
         try:
@@ -97,7 +98,7 @@ def feature_extract(frame_path):
 
 if __name__ == '__main__':
 
-    print("train/val:")
+    print("train/val/test1/test2/test3:")
     select = input()
 
     if(select == "train"):

@@ -1,8 +1,8 @@
 import numpy as np
 
 import tensorflow as tf
-
 import keras
+
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import *
 from keras import backend as K
