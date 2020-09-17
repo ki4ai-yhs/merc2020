@@ -9,8 +9,6 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import *
 from keras import backend as K
 
-from swa.keras import SWA
-
 parser = argparse.ArgumentParser(description='Train')
 parser.add_argument('--gpu', type=str, default='0')
 args = parser.parse_args()
@@ -24,7 +22,6 @@ def video_base_model():
 
     model = keras.models.Sequential()
     model.add(Masking(mask_value=_MASKING, input_shape=(_MAX_LEN, 4096)))
-    model.add(Dropout(0.5))
     model.add((LSTM(128, activation='relu')))
     model.add(Dense(64, activation='relu',name='BottleNeck'))
     model.add(Dense(7, name='emotion',activation='softmax'))
@@ -42,12 +39,13 @@ def main():
     y_val = np.load(_ROOT_PATH + "label_val.npy")
 
     # Convert labels to categorical one-hot encoding
-    y_train = keras.utils.to_categorical(y_train, num_classes = 7)
-    y_val = keras.utils.to_categorical(y_val, num_classes = 7)
+    y_train = keras.utils.to_categorical(y_train, num_classes=7)
+    y_val = keras.utils.to_categorical(y_val, num_classes=7)
 
     # Training Parameter setting
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.9)
-    config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 30},gpu_options=gpu_options)
+    config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 30},
+            gpu_options=gpu_options)
     sess = tf.Session(config=config)
     keras.backend.set_session(sess)
  
@@ -55,20 +53,21 @@ def main():
     model = video_base_model()
 
     model_path = 'model/' + 'video_model_' + 'acc_{val_acc:.4f}.h5'    
-    checkpoint = ModelCheckpoint(filepath=model_path, monitor='val_loss', verbose=1, save_best_only=True)
-    early_stopping = EarlyStopping(monitor='val_acc', min_delta = 0.0005, patience = 30, verbose = 1, mode='auto')
+    checkpoint = ModelCheckpoint(filepath=model_path, monitor='val_loss',
+            verbose=1, save_best_only=True)
+    early_stopping = EarlyStopping(monitor='val_acc', min_delta=0.0005,
+            patience=30, verbose=1, mode='auto')
  
     # Train
-#    sgd = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    adam = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-    start_epoch = 20
-    swa = SWA(start_epoch=start_epoch, lr_schedule = 'constant', swa_lr = 0.001, verbose=1)
-
-    model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
-    model.fit(x_train, y_train, batch_size = 256, epochs = 300, validation_data= (x_val,y_val), verbose=1, callbacks=[early_stopping, checkpoint, swa])
+    sgd = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(loss='categorical_crossentropy', optimizer=sgd,
+            metrics=['accuracy'])
+    model.fit(x_train, y_train, batch_size=256, epochs=300,
+            validation_data=(x_val,y_val), verbose=1,
+            callbacks=[early_stopping, checkpoint])
     
     # Evaluation
-    score = model.evaluate(x_val, y_val, batch_size = 256)
+    score = model.evaluate(x_val, y_val, batch_size=256)
 
     print(score)
     print('Test score:', score[0])
