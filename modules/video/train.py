@@ -1,4 +1,6 @@
+import os
 import numpy as np
+import argparse
 
 import tensorflow as tf
 import keras
@@ -7,6 +9,14 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.layers import *
 from keras import backend as K
 
+from swa.keras import SWA
+
+parser = argparse.ArgumentParser(description='Train')
+parser.add_argument('--gpu', type=str, default='0')
+args = parser.parse_args()
+
+os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
+
 def video_base_model():
     
     _MASKING = 0
@@ -14,7 +24,8 @@ def video_base_model():
 
     model = keras.models.Sequential()
     model.add(Masking(mask_value=_MASKING, input_shape=(_MAX_LEN, 4096)))
-    model.add((LSTM(256, activation='relu')))
+    model.add(Dropout(0.5))
+    model.add((LSTM(128, activation='relu')))
     model.add(Dense(64, activation='relu',name='BottleNeck'))
     model.add(Dense(7, name='emotion',activation='softmax'))
     model.summary()
@@ -48,11 +59,13 @@ def main():
     early_stopping = EarlyStopping(monitor='val_acc', min_delta = 0.0005, patience = 30, verbose = 1, mode='auto')
  
     # Train
-    sgd = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-    adam = keras.optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+#    sgd = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+    adam = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    start_epoch = 20
+    swa = SWA(start_epoch=start_epoch, lr_schedule = 'constant', swa_lr = 0.001, verbose=1)
 
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-    model.fit(x_train, y_train, batch_size = 256, epochs = 300, validation_data= (x_val,y_val), verbose=1, callbacks=[early_stopping, checkpoint])
+    model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+    model.fit(x_train, y_train, batch_size = 256, epochs = 300, validation_data= (x_val,y_val), verbose=1, callbacks=[early_stopping, checkpoint, swa])
     
     # Evaluation
     score = model.evaluate(x_val, y_val, batch_size = 256)

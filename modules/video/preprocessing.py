@@ -1,4 +1,3 @@
-#from keras.applications.inception_v3 import preprocess_input
 from keras_vggface.utils import preprocess_input
 import cv2
 import numpy as np

@@ -78,7 +78,7 @@ def vgg_face(input_list):
 
 def feature_extract(frame_path):
 
-    interval = 10  # Use 1 frame for 1 second (1 frame/sec)
+    interval = 1  # Use 1 frame for 1 second (1 frame/sec)
     img = test_input(frame_path, interval)
     # face cropper
     resCropped, cnt = testFaceCropper(img)
