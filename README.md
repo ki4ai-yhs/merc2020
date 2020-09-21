@@ -58,3 +58,6 @@
 	
 ### Performance
  	- Accuracy: 52.56% (valiation dataset)
+
+### License
+	- The source code, pre-trained models, datasets are available under MERC2020 competition.
