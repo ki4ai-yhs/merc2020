@@ -3,13 +3,14 @@
 	- This is baseline code for MERC2020
 	- This code is based on keras(2.2.4) and tensorflow(1.14).
 	- You need to prepare multimodal emotion dataset and speech recognition baseline code.
-	- Code for data preperation is uploaded in '/utils' (10/23)
+	- Useful codes for data preperation are uploaded in '/utils' (10/23)
 
 ## Installation
 	pip3 install -r requirement.txt
 
 
-## Data and label preperation
+## Useful code for data preperation
+
 	mp4 to jpg: utils/video_to_image.py
 	text emb to npy: utils/text_to_npy.py
 	label to npy: utils/label_to.npy.py
