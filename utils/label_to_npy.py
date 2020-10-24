@@ -3,7 +3,7 @@ import numpy as np
  
 
 
-emotion = ['ang', 'dis', 'fea', 'hap', 'neu', 'sad', 'sur']
+emotion = ['hap', 'ang', 'dis', 'fea', 'neu', 'sad', 'sur']
 
 def label_to_npy(load_dir, save_dir):
 
