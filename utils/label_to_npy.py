@@ -2,8 +2,8 @@ import csv
 import numpy as np
  
 
-
 emotion = ['hap', 'ang', 'dis', 'fea', 'neu', 'sad', 'sur']
+
 
 def label_to_npy(load_dir, save_dir):
 
